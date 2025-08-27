@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Início{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-11">
+      <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="mb-0">Calendário de Consultas</h2>
+        </div>
+        <div class="card-body">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FullCalendar CSS e JS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var el = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(el, {
+    initialView: 'dayGridMonth',
+    locale: 'pt-br',
+    events: [
+      {% for c in consultas %}
+      {
+        title: '{{ c.id }} - {{ c.paciente.nome|escapejs }}',
+        start: '{{ c.data_consulta|date:"Y-m-d" }}',
+        url: '{% url "consulta_editar" c.id %}',
+        color: '{% if c.situacao == "Finalizada" %}red{% else %}green{% endif %}'
+      },
+      {% endfor %}
+    ]
+  });
+  calendar.render();
+});
+</script>
+{% endblock %}

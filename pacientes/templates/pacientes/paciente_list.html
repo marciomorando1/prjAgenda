@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Pacientes{% endblock %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <h2>Pacientes</h2>
+    <a href="{% url 'paciente_novo' %}" class="btn btn-primary mb-3">+ Novo Paciente</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td>{{ paciente.id }}</td>
+                <td>{{ paciente.nome }}</td>
+                <td>
+                    <a href="{% url 'paciente_editar' paciente.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'paciente_excluir' paciente.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                </td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
