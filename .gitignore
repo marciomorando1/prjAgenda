@@ -1,0 +1,59 @@
+# Arquivo .gitignore para Django
+
+# Banco de SQLite
+db.sqlite3
+*.sqlite3
+
+# Arquivos Python temporários
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Ambiente virtual
+venv/
+env/
+ENV/
+.env
+.venv/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de instalação
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+
+# Static files coletados (em desenvolvimento)
+/staticfiles/
+/mediafiles/
+
+# Arquivos sensíveis
+secrets.py
+config_private.py
