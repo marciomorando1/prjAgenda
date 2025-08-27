@@ -4,9 +4,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'replace-this-with-a-secret-key'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.1.6', '192.168.1.7','127.0.0.1:8000','127.0.0.1','192.168.1.6:8000']
+ALLOWED_HOSTS = ['marciomorando.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
