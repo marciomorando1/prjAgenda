@@ -1,5 +1,6 @@
 from django.db import models
 from pacientes.models import Paciente
+from django.contrib.auth.models import User
 
 class Consulta(models.Model):
     SITUACAO_CHOICES = [
@@ -12,6 +13,7 @@ class Consulta(models.Model):
         ('Particular', 'Particular')
     ]
 
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     data_consulta = models.DateField()
     valor_consulta = models.DecimalField(max_digits=10, decimal_places=2)

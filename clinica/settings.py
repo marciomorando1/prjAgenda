@@ -6,7 +6,7 @@ SECRET_KEY = 'replace-this-with-a-secret-key'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['marciomorando.pythonanywhere.com']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -71,3 +71,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL = '/login/'

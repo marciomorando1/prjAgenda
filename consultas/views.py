@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.utils.dateparse import parse_date
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # =========================
 # Formulário de Consulta
@@ -12,38 +13,48 @@ from django.contrib import messages
 class ConsultaForm(forms.ModelForm):
     class Meta:
         model = Consulta
-        fields = '__all__'
+        fields = '__all__'  
         widgets = {
             'data_consulta': forms.DateInput(attrs={'type': 'date'}),
             'horario_inicio': forms.TimeInput(attrs={'type': 'time'}),
             'horario_fim': forms.TimeInput(attrs={'type': 'time'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'usuario' in self.fields:
+            del self.fields['usuario']
 
 # =========================
 # Página inicial com calendário
 # =========================
+@login_required 
 def home(request):
-    consultas = Consulta.objects.all()
+    consultas = Consulta.objects.filter(usuario=request.user)
     return render(request, 'home.html', {'consultas': consultas})
 
 # =========================
 # Cadastro de nova consulta
 # =========================
+@login_required 
 def consulta_nova(request):
     if request.method == 'POST':
-        form = ConsultaForm(request.POST)
+        form = ConsultaForm(request.POST, user = request.user)
         if form.is_valid():
-            form.save()
-            return redirect('home')  # redireciona para home para ver no calendário
+            consulta = form.save(commit=False)  
+            consulta.usuario = request.user    
+            consulta.save()                    
+            return redirect('home')
     else:
-        form = ConsultaForm()
+        form = ConsultaForm(user=request.user)
     return render(request, 'consultas/consulta_form.html', {'form': form})
 
 # =========================
 # Lista de consultas / Relatórios
 # =========================
+@login_required 
 def consulta_lista(request):
-    consultas = Consulta.objects.all()
+    consultas = Consulta.objects.filter(usuario=request.user)
     total_valor = 0
 
     # Filtros
@@ -72,15 +83,16 @@ def consulta_lista(request):
 # =========================
 # Página de calendário (opcional, se precisar)
 # =========================
+@login_required 
 def calendario(request):
-    consultas = Consulta.objects.all()
+    consultas = Consulta.objects.filter(usuario=request.user)
     return render(request, 'consultas/calendario.html', {'consultas': consultas})
 
-
+@login_required 
 def consulta_editar(request, pk):
-    consulta = get_object_or_404(Consulta, pk=pk)
+    consulta = get_object_or_404(Consulta, pk=pk, usuario=request.user)
     if request.method == 'POST':
-        form = ConsultaForm(request.POST, instance=consulta)
+        form = ConsultaForm(request.POST, instance=consulta, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Consulta atualizada com sucesso!")
@@ -88,6 +100,6 @@ def consulta_editar(request, pk):
         else:
             messages.error(request, "Erro ao atualizar a consulta. Verifique os campos.")
     else:
-        form = ConsultaForm(instance=consulta)
+        form = ConsultaForm(instance=consulta, user=request.user)
 
     return render(request, 'consultas/consulta_form.html', {'form': form})
